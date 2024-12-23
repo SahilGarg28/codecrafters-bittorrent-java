@@ -2,12 +2,12 @@ import com.google.gson.Gson;
 // import com.dampcake.bencode.Bencode; - available if you need it!
 class Decoded{
 	String stringDecoded=null;
-	Integer intDecoded= null;
+	Long longDecoded= null;
 	Decoded(String stringDecoded){
 		this.stringDecoded=stringDecoded;
 	}
-	Decoded(Integer intDecoded){
-		this.intDecoded=intDecoded;
+	Decoded(Long longDecoded){
+		this.longDecoded=longDecoded;
 	}
 }
 
@@ -59,7 +59,7 @@ public class Main {
     	if(ans.length()>1&&ans.charAt(0)=='0') {
     		return new Decoded("invalid");
     	}
-    	return new Decoded(Integer.parseInt(ans));
+    	return new Decoded(Long.parseLong(ans));
     }
     else {
       throw new RuntimeException("Only strings are supported at the moment");
