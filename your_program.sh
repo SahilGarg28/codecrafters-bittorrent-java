@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/bin/sh 
+echo "Hello World!"
 #
 # Use this script to run your program LOCALLY.
 #
