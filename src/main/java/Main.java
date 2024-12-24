@@ -1,13 +1,19 @@
+import java.util.ArrayList;
+
 import com.google.gson.Gson;
 // import com.dampcake.bencode.Bencode; - available if you need it!
 class Decoded{
 	String stringDecoded=null;
 	Long longDecoded= null;
+	ArrayList<Object> listDecoded=null;
 	Decoded(String stringDecoded){
 		this.stringDecoded=stringDecoded;
 	}
 	Decoded(Long longDecoded){
 		this.longDecoded=longDecoded;
+	}
+	Decoded(ArrayList<Object> listDecoded){
+		this.listDecoded=listDecoded;
 	}
 }
 
@@ -43,7 +49,44 @@ public class Main {
 
   static Decoded decodeBencode(String bencodedString) {
     if (Character.isDigit(bencodedString.charAt(0))) {
-      int firstColonIndex = 0;
+      return new Decoded(decodeStringBencode(bencodedString));
+    } 
+    else if(Character.isAlphabetic(bencodedString.charAt(0))) {
+    	if(bencodedString.charAt(0)=='i') {
+        	return new Decoded(decodeLongBencode(bencodedString));
+        }
+    	else if(bencodedString.charAt(0)=='l') {
+    		ArrayList<Object> decodedList=new ArrayList<Object>();
+    		int startIndex=1;
+    		int lastIndex=bencodedString.length()-2;
+    		while(startIndex<lastIndex) {
+    		if (Character.isDigit(bencodedString.charAt(startIndex))) {
+    			String strValue=decodeStringBencode(bencodedString.substring(startIndex));
+    			int length=strValue.length();
+    			decodedList.add(strValue) ;
+    			startIndex=startIndex+length+2;
+    		} 
+    		else {
+    			long longValue=decodeLongBencode(bencodedString.substring(startIndex));
+    			int length=String.valueOf(longValue).length();
+    			decodedList.add(longValue);
+    			startIndex=startIndex+length+2;
+    
+    		}
+    		}
+    		return new Decoded(decodedList);
+    		
+    	}
+    	else {
+    		throw new RuntimeException("Only");
+    	}
+    }
+    else {
+      throw new RuntimeException("Only strings are supported at the moment");
+    }
+  }
+  static String decodeStringBencode(String bencodedString) {
+	  int firstColonIndex = 0;
       for(int i = 0; i < bencodedString.length(); i++) { 
         if(bencodedString.charAt(i) == ':') {
           firstColonIndex = i;
@@ -51,19 +94,18 @@ public class Main {
         }
       }
       int length = Integer.parseInt(bencodedString.substring(0, firstColonIndex));
-      return new Decoded(bencodedString.substring(firstColonIndex+1, firstColonIndex+1+length));
-    } 
-    else if(Character.isAlphabetic(bencodedString.charAt(0))) {
-    	int firstColonIndex=0;
-    	String ans= bencodedString.substring(firstColonIndex+1,bencodedString.length()-1);
-    	if(ans.length()>1&&ans.charAt(0)=='0') {
-    		return new Decoded("invalid");
-    	}
-    	return new Decoded(Long.parseLong(ans));
-    }
-    else {
-      throw new RuntimeException("Only strings are supported at the moment");
-    }
+      return bencodedString.substring(firstColonIndex+1, firstColonIndex+1+length);
   }
+  
+  static Long decodeLongBencode(String bencodedString) {
+	  int firstColonIndex=0;
+  	String ans= bencodedString.substring(firstColonIndex+1,bencodedString.indexOf('e'));
+  	if(ans.length()>1&&ans.charAt(0)=='0') {
+  		return null;
+  	}
+  	return Long.parseLong(ans);
+  }
+  
+  
   
 }
