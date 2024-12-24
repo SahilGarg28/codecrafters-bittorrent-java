@@ -91,16 +91,24 @@ public class Main {
     static String findNextBencodeBlock(String bencodedString) {
         int balance = 0;
         int endIndex = 0;
+//        System.out.println(bencodedString.length());
         for (int i = 0; i < bencodedString.length(); i++) {
             char current = bencodedString.charAt(i);
-//            System.out.println(i+" --------------------------------------------------------------"+current);
+//            System.out.println(i+" -----------------------------------"+current);
             if (current == 'l'||current=='i') balance++;
             if (current == 'e') balance--;
             if(current==':') {
             	
-            	int len=Character.getNumericValue(bencodedString.charAt(i-1));
+//            	int len=Character.getNumericValue(bencodedString.charAt(i-1));
 //            	Character.getNumericValue(char)
-            	System.out.println();
+            	int startIndex=i-1;
+            	while(Character.isDigit(bencodedString.charAt(startIndex)) ) {
+            		
+//            		System.out.println(startIndex+"--------hahahaha-----------"+Character.isDigit(bencodedString.charAt(startIndex)));
+            		startIndex--;
+            	}
+            	int len=Integer.valueOf(bencodedString.substring(startIndex+1,i)); 
+//            	System.out.println();
             	i=i+len;
             }
             if (balance == 0) {
