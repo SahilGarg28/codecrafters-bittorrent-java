@@ -93,8 +93,16 @@ public class Main {
         int endIndex = 0;
         for (int i = 0; i < bencodedString.length(); i++) {
             char current = bencodedString.charAt(i);
+//            System.out.println(i+" --------------------------------------------------------------"+current);
             if (current == 'l'||current=='i') balance++;
             if (current == 'e') balance--;
+            if(current==':') {
+            	
+            	int len=Character.getNumericValue(bencodedString.charAt(i-1));
+//            	Character.getNumericValue(char)
+            	System.out.println();
+            	i=i+len;
+            }
             if (balance == 0) {
                 endIndex = i + 1;
                 break;
