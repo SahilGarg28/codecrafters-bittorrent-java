@@ -74,22 +74,22 @@ public class Main {
     
     static HashMap<String,Object> decodeDictBencode(String bencodedString){
     	HashMap<String,Object> dictionary=new HashMap<String, Object>();
-//    	System.out.println(dictionary);
+    	System.out.println(dictionary);
     	int index=1;
-//    	System.out.println(index);
+    	System.out.println(index);
     	int key=1;
 		String DictKey=null;
 		Object DictValue=null;
     	while(index<bencodedString.length()-1) {
     		char current=bencodedString.charAt(index);
-//    		System.out.println(index+"------------------"+current);
+    		System.out.println(index+"------------------"+current);
     		//let key=1;
     		//if key=1 then means we have key other wise we have value;\
     		
     		
     		if(Character.isDigit(current)) {
     			String strValue=decodeStringBencode(bencodedString.substring(index));
-//    			System.out.println(strValue+"---------------------------------------------");
+    			System.out.println(strValue+"---------------------------------------------");
     			if(key==1) {
     				DictKey=strValue;
     				key=0;
@@ -98,7 +98,7 @@ public class Main {
     				key=1;
     			}
     			index += strValue.length() + String.valueOf(strValue.length()).length() + 1;
-//    			System.out.println(index);
+    			System.out.println(index);
     			
     		}
     		else if(current == 'i') {
@@ -124,8 +124,11 @@ public class Main {
 //                index += sublist.length();
     			
     			String subDict=findNextBencodeBlock(bencodedString.substring(index));
+    			System.out.println(subDict+"________________________________________________________");
     			DictValue=decodeDictBencode(subDict);
+    			System.out.println(DictValue+"-------------------------------------------------------------");
     			index=index+subDict.length();
+    			
     			key=1;
     			
     		}else {
@@ -176,6 +179,7 @@ public class Main {
     static String findNextBencodeBlock(String bencodedString) {
         int balance = 0;
         int endIndex = 0;
+        int lastIndex=0;
         for (int i = 0; i < bencodedString.length(); i++) {
             char current = bencodedString.charAt(i);
             if (current == 'l'||current=='i'||current=='d') balance++;
@@ -186,8 +190,12 @@ public class Main {
             	while(Character.isDigit(bencodedString.charAt(startIndex)) ) {
             		startIndex--;
             	}
+            	if(lastIndex>startIndex) {
+            		startIndex=lastIndex;
+            	}
             	int len=Integer.valueOf(bencodedString.substring(startIndex+1,i)); 
             	i=i+len;
+            	lastIndex=i;
             }
             if (balance == 0) {
                 endIndex = i + 1;
